@@ -1,6 +1,4 @@
-// ==========================
-// 🧠 ENTIDADE PRINCIPAL: Tarefa
-// ==========================
+
 class Tarefa {
   constructor(titulo, prioridade) {
     this.id = Date.now();
@@ -20,12 +18,8 @@ const list = document.getElementById("taskList");
 const loader = document.getElementById("loader");
 const feedback = document.getElementById("feedback");
 
-// Array principal (lista de tarefas)
 let tarefas = [];
 
-// ==========================
-// 🌐 FETCH (REQUISIÇÃO ASSÍNCRONA)
-// ==========================
 function carregarTarefasIniciais() {
   loader.classList.remove("hidden");
   fetch("./tarefas.json") // arquivo local
@@ -138,12 +132,12 @@ function mostrarFeedback(msg, erro = false) {
 // 🚀 INICIALIZAÇÃO
 // ==========================
 (async function init() {
-  try {
+  try { 
     carregarLocalStorage();
-    if (tarefas.length === 0) {
-      await carregarTarefasIniciais();
+    if (tarefas.length !== 0) {
+      await renderizarTarefas();
     } else {
-      renderizarTarefas();
+      carregarTarefasIniciais();
     }
   } catch (e) {
     mostrarFeedback("Erro ao inicializar o app.", true);

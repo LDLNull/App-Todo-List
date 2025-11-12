@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gerenciador de Tarefas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,7 +13,7 @@
   </header>
 
   <main>
-    <!-- Formulário para adicionar tarefa -->
+    
     <form id="taskForm" aria-label="Adicionar nova tarefa">
       <input type="text" id="taskTitle" placeholder="Título da tarefa" required />
       <select id="taskPriority">
@@ -23,18 +24,17 @@
       <button type="submit">Adicionar</button>
     </form>
 
-    <!-- Feedbacks -->
+    
     <div id="feedback" role="alert"></div>
 
-    <!-- Lista dinâmica -->
+    
     <section id="taskList" aria-live="polite"></section>
 
-    <!-- Loader -->
     <div id="loader" class="hidden">Carregando tarefas...</div>
   </main>
 
   <footer>
-    <p>Feito com ❤️ em JavaScript puro</p>
+    <p>Feito com JavaScript puro</p>
   </footer>
 
   <script src="app.js"></script>

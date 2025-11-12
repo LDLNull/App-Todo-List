@@ -1,7 +1,7 @@
 :root {
   --bg: #f8f9fa;
   --card: #fff;
-  --primary: #007bff;
+  --primary: #c1cf00c7;
   --text: #333;
   --border: #ddd;
 }
@@ -21,7 +21,7 @@ header, footer {
   text-align: center;
   padding: 1rem;
   background: var(--primary);
-  color: #fff;
+  color: #000000;
 }
 
 main {
