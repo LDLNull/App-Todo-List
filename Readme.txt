@@ -12,3 +12,10 @@ Projeto de aplicativo de lista de tarefas.
 
 -salvamento de tarefas em um arquivo JSON local
 
+_________________________________________________
+
+12/11 
+
+Trabalhando na implementaçao de animações com a library GSAP
+
+Mudanças no layout da pagina
