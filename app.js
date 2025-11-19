@@ -9,7 +9,7 @@ class Tarefa {
 }
 
 // ==========================
-// 🔧 VARIÁVEIS E SELETORES
+//  VARIÁVEIS E SELETORES
 // ==========================
 const form = document.getElementById("taskForm");
 const input = document.getElementById("taskTitle");
@@ -37,7 +37,7 @@ function carregarTarefasIniciais() {
 }
 
 // ==========================
-// 💾 LOCAL STORAGE
+// LOCAL STORAGE
 // ==========================
 function salvarLocalStorage() {
   localStorage.setItem("tarefas", JSON.stringify(tarefas));
@@ -49,7 +49,7 @@ function carregarLocalStorage() {
 }
 
 // ==========================
-// 🧩 RENDERIZAÇÃO DOM
+// RENDERIZAÇÃO DOM
 // ==========================
 function renderizarTarefas() {
   list.innerHTML = "";
@@ -76,7 +76,7 @@ function renderizarTarefas() {
 }
 
 // ==========================
-// ➕ ADICIONAR TAREFA
+// ADICIONAR TAREFA
 // ==========================
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -98,7 +98,7 @@ form.addEventListener("submit", (e) => {
 });
 
 // ==========================
-// ✅ MARCAR COMO CONCLUÍDA
+// MARCAR COMO CONCLUÍDA
 // ==========================
 function alternarStatus(id) {
   // Exemplo de uso do find()
@@ -109,7 +109,7 @@ function alternarStatus(id) {
 }
 
 // ==========================
-// ❌ REMOVER TAREFA
+// REMOVER TAREFA
 // ==========================
 function removerTarefa(id) {
   // Exemplo de uso de filter()
@@ -120,7 +120,7 @@ function removerTarefa(id) {
 }
 
 // ==========================
-// 🧭 FEEDBACK VISUAL
+// FEEDBACK VISUAL
 // ==========================
 function mostrarFeedback(msg, erro = false) {
   feedback.textContent = msg;
@@ -129,7 +129,7 @@ function mostrarFeedback(msg, erro = false) {
 }
 
 // ==========================
-// 🚀 INICIALIZAÇÃO
+// INICIALIZAÇÃO
 // ==========================
 (async function init() {
   try { 

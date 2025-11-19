@@ -39,18 +39,32 @@ form {
 input, select, button {
   padding: 0.5rem;
   font-size: 1rem;
+  transition: transform 0.2s ease, background-color 0.3s ease;
 }
+
+input:hover{
+  transform: scale(1.05);
+  border-color:#c1cf00c7 ;
+}
+input:focus{
+  border-color: #c1cf00;
+}
+
 
 button {
   background: var(--primary);
   color: #fff;
   border: none;
   cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease; 
 }
 
-button:hover {
-  opacity: 0.9;
+button:hover{
+  transform: scale(1.05);
+  color: #000000;
 }
+
+
 
 #taskList {
   display: flex;
