@@ -12,17 +12,17 @@
 
 body {
   margin: 0;
-  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   background: var(--bg);
   color: var(--text);
 }
 
 header, footer {
-  border-radius: 15px;
+  border-radius: 5px;
   margin-left: auto;
   margin-right: auto;
   display: block;
-  width: 75%;
+  width: 95%;
   text-align: center;
   padding: 1rem;
   background: var(--primary);
@@ -50,13 +50,19 @@ footer{
 
 
 main {
+  display: grid;
   max-width: 600px;
-  margin: 1rem auto;
+  margin: 10rem auto;
   padding: 1rem;
+}
+
+h1{
+  color: #4d4d4d;
 }
 
 form {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1rem;
 }
@@ -72,7 +78,9 @@ input:hover{
   border-color:#c1cf00c7 ;
 }
 input:focus{
-  border-color: #c1cf00;
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px #c1cf0040;
 }
 
 
@@ -98,13 +106,16 @@ select:hover{
 }
 
 
-.fadeInElements{
+
+.animatedElements{
   animation: fadeIn 0.5s;
 }
 
 #taskList {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   gap: 0.5rem;
 }
 
@@ -112,10 +123,15 @@ select:hover{
   background: var(--card);
   border: 1px solid var(--border);
   border-left: 5px solid var(--primary);
-  padding: 0.75rem;
+  padding: 0.80rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: transform 0.2s ease, background-color 0.8s ease;
+}
+.task:hover{
+  transform: scale(1.005);
+  color: grey;
 }
 
 .task.done {
@@ -127,8 +143,12 @@ select:hover{
   display: none;
 }
 
-@media (max-width: 600px) {
+@media (min-width: 600px) {
   form {
-    flex-direction: column;
+    flex-direction: row;
+  }
+  header, footer{
+    width: 75%;
+    border-radius: 15px;
   }
 }
