@@ -16,6 +16,11 @@ _________________________________________________
 
 12/11 
 
-Trabalhando na implementaçao de animações com a library GSAP
+-Trabalhando na implementaçao de animações com a library GSAP
 
-Mudanças no layout da pagina
+-Mudanças no layout da pagina
+_________________________________________________
+21/11
+
+-Mais mudanças no layout: Grid das tarefas armazenadas agora são visualizadas em um layout horizontal
+-Integração de animações on-load e on-hover para diversos elementos
