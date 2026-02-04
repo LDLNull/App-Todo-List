@@ -1,9 +1,19 @@
 :root {
   --bg: #f8f9fa;
   --card: #fff;
-  --primary: #c1cf00c7;
-  --text: #333;
-  --border: #ddd;
+  --primary: #0083cfc7;
+  --text: #fffdfd;
+  --border: #ddd;  
+  /* priority shades – stronger blue for higher priority */
+  --prio-alta: #004b74; /* alta = strongest */
+  --prio-media: #007bbf; /* média = medium */
+  --prio-baixa: #67cfff; /* baixa = light */
+}
+:root{
+  --glass-bg: rgba(255,255,255,0.12);
+  --glass-border: rgba(255,255,255,0.22);
+  --glass-shadow: rgba(2,6,23,0.45);
+  --accent: rgba(0, 138, 207, 0.85);
 }
 
 * {
@@ -25,8 +35,8 @@ header, footer {
   width: 95%;
   text-align: center;
   padding: 1rem;
-  background: var(--primary);
-  color: #000000;
+  background: linear-gradient(90deg, var(--primary), rgba(2,20,30,0.85));
+  color: var(--text);
   animation: fadeIn 0.5s ;
 }
 
@@ -57,7 +67,7 @@ main {
 }
 
 h1{
-  color: #4d4d4d;
+  color: var(--text);
 }
 
 form {
@@ -65,22 +75,110 @@ form {
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px;
+  padding: 0.75rem;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  color: #f6f7f8;
+  box-shadow: 0 8px 28px rgba(2,6,23,0.45);
 }
 
-input, select, button {
+/* Form controls inside glass form */
+form input, form select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: #f6f7f8;
   padding: 0.5rem;
   font-size: 1rem;
-  transition: transform 0.2s ease, background-color 0.3s ease;
+  border-radius: 8px;
+  transition: transform 0.18s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-input:hover{
-  transform: scale(1.05);
-  border-color:#c1cf00c7 ;
+form input:hover, form select:hover {
+  transform: scale(1.02);
 }
-input:focus{
-  border-color: var(--primary);
+
+form input:focus, form select:focus {
   outline: none;
-  box-shadow: 0 0 0 3px #c1cf0040;
+  border-color: var(--accent);
+  box-shadow: 0 6px 18px rgba(193,207,0,0.12);
+}
+
+/* Styling for date/time input */
+form input[type="datetime-local"] {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  min-width: 200px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+form input[type="datetime-local"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 6px 18px rgba(0,138,207,0.12);
+  outline: none;
+}
+
+/* Make the in-input text readable on WebKit browsers */
+form input[type="datetime-local"]::-webkit-datetime-edit {
+  color: var(--text);
+}
+
+/* Style calendar/time picker indicator (WebKit) */
+form input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(160deg);
+  opacity: 0.9;
+}
+
+/* Small responsive tweak so the datetime input doesn't shrink too much */
+@media (max-width: 600px) {
+  form input[type="datetime-local"] { min-width: 100px; padding: 0.4rem 0.5rem; font-size: 0.92rem; }
+}
+
+/* Buttons inside form */
+form button {
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+} 
+
+form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(2,6,23,0.28);
+  filter: brightness(1.05);
+}
+
+/* feedback */
+#feedback {
+  color: rgba(255,255,255,0.95);
+  min-height: 1.2rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  display: inline-block;
+  transition: opacity 180ms ease, transform 180ms ease;
+  font-weight: 600;
+}
+
+#feedback.success {
+  background: linear-gradient(90deg, rgba(0,138,207,0.10), rgba(0,138,207,0.04));
+  border: 1px solid rgba(0,138,207,0.18);
+  color: var(--text);
+}
+
+#feedback.error {
+  background: linear-gradient(90deg, rgba(220,38,38,0.10), rgba(220,38,38,0.04));
+  border: 1px solid rgba(220,38,38,0.18);
+  color: var(--text);
 }
 
 
@@ -112,7 +210,7 @@ select:hover{
 }
 
 #taskList {
-  display: flex;
+  display: grid;
   flex-direction: row;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -134,6 +232,69 @@ select:hover{
   color: grey;
 }
 
+/* Glass variant for tasks */
+.task.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-left: 5px solid var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 22px rgba(2,6,23,0.35);
+}
+.task.glass:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 34px rgba(2,6,23,0.45);
+  color: #eaeaea;
+} 
+
+/* Per-priority accents */
+.task.prio-alta { border-left-color: var(--prio-alta); }
+.task.prio-media { border-left-color: var(--prio-media); }
+.task.prio-baixa { border-left-color: var(--prio-baixa); }
+
+.task.glass.prio-alta { box-shadow: 0 8px 28px rgba(0,75,116,0.28); }
+.task.glass.prio-media { box-shadow: 0 8px 28px rgba(0,123,191,0.22); }
+.task.glass.prio-baixa { box-shadow: 0 8px 28px rgba(103,207,255,0.12); }
+
+/* readable small badge for priority */
+.task .prio-badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  margin-left: 0.6rem;
+  opacity: 0.95;
+}
+.task.prio-alta .prio-badge { background: linear-gradient(90deg, rgba(0,75,116,0.12), rgba(0,75,116,0.05)); color: var(--text); }
+.task.prio-media .prio-badge { background: linear-gradient(90deg, rgba(0,123,191,0.10), rgba(0,123,191,0.04)); color: var(--text); }
+.task.prio-baixa .prio-badge { background: linear-gradient(90deg, rgba(103,207,255,0.08), rgba(103,207,255,0.03)); color: var(--text); }
+
+/* due date badge */
+.due-badge {
+  font-size: 0.72rem;
+  padding: 0.12rem 0.46rem;
+  margin-left: 0.5rem;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.due-badge.overdue {
+  background: linear-gradient(90deg, rgba(220,38,38,0.14), rgba(220,38,38,0.06));
+  border-color: rgba(220,38,38,0.18);
+  color: var(--text);
+}
+.due-badge.soon {
+  background: linear-gradient(90deg, rgba(255,199,0,0.12), rgba(255,199,0,0.04));
+  border-color: rgba(255,199,0,0.18);
+  color: var(--text);
+}
+.task.overdue { border-left-color: rgba(220,38,38,0.9); box-shadow: 0 8px 30px rgba(220,38,38,0.08); }
+
+/* Sortable drag visuals */
+.sortable-ghost { opacity: 0.5; transform: scale(0.98); transition: opacity 120ms ease, transform 120ms ease; }
+.sortable-chosen { box-shadow: 0 16px 40px rgba(2,6,23,0.34); transform: translateY(-4px); transition: box-shadow 120ms ease, transform 120ms ease; }
+.task.drag-hint { outline: 2px dashed rgba(255,255,255,0.08); }
+
 .task.done {
   opacity: 0.6;
   text-decoration: line-through;
@@ -143,10 +304,82 @@ select:hover{
   display: none;
 }
 
+.app-bg{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, var(--primary) 0%, rgba(2,20,30,0.85) 60%), url('assets/noise.png');
+  background-size: cover;
+  opacity: 0.95;
+}
+/* Glass card */
+.glass{
+  position: relative; /* for pseudo overlay */
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px var(--glass-shadow);
+  color: #fff;
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  padding: 0.8rem;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+/* decorative sheen / subtle top highlight */
+.glass::before{
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  mix-blend-mode: overlay;
+}
+
+/* hover micro-interaction */
+.glass:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(2,6,23,0.55);
+}
+
+/* active state for interactive .glass elements (buttons/cards) */
+.glass:active{
+  transform: translateY(0);
+  box-shadow: 0 6px 20px rgba(2,6,23,0.40);
+}
+
+/* Prevent header/footer from animating on click */
+header.glass:active,
+footer.glass:active {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove accidental focus outline for non-interactive regions */
+header.glass:focus,
+footer.glass:focus {
+  outline: none;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce){
+  .glass, .glass:hover{ transition: none; transform: none; }
+}
+
+
 @media (min-width: 600px) {
   form {
     flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
   }
+  /* Layout tweaks: title expands, controls stay compact */
+  form #taskTitle { flex: 1 1 auto; min-width: 90px; }
+  form select#taskPriority { flex: 0 0 95px; max-width: 110px; padding: 0.36rem 0.5rem; font-size: 0.92rem; }
+  form input[type="datetime-local"] { flex: 0 0 96px; min-width: 88px; padding: 0.28rem 0.36rem; font-size: 0.88rem; }
+  form button { flex: 0 0 auto; padding: 0.5rem 0.7rem; }
+
   header, footer{
     width: 75%;
     border-radius: 15px;

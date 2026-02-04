@@ -1,12 +1,14 @@
 
 class Tarefa {
-  constructor(titulo, prioridade) {
+  constructor(titulo, prioridade, dueDate = null) {
     this.id = Date.now();
     this.titulo = titulo;
     this.prioridade = prioridade;
+    this.dueDate = dueDate; // ISO string or null
     this.concluida = false;
+    this.notified = false; // whether notification for due date was already sent
   }
-}
+} 
 
 // ==========================
 //  VARIÁVEIS E SELETORES
@@ -28,7 +30,11 @@ function carregarTarefasIniciais() {
       return res.json();
     })
     .then(dados => {
-      tarefas = dados.map(t => new Tarefa(t.titulo, t.prioridade));
+      tarefas = dados.map(t => {
+        const nt = new Tarefa(t.titulo, t.prioridade, t.dueDate || null);
+        nt.notified = t.notified || false;
+        return nt;
+      });
       salvarLocalStorage();
       renderizarTarefas();
     })
@@ -62,13 +68,16 @@ function renderizarTarefas() {
   // Exemplo de uso de map() para gerar HTML
   tarefas.map(tarefa => {
     const div = document.createElement("div");
-    div.className = `task ${tarefa.concluida ? "done" : ""}`;
+    const prioClass = `prio-${tarefa.prioridade}`; // e.g., prio-alta
+    // stable id for ordering
+    div.dataset.id = tarefa.id;
+    div.className = `task glass ${prioClass} ${tarefa.concluida ? "done" : ""}`;
 
     div.innerHTML = `
-      <span>${tarefa.titulo} (${tarefa.prioridade})</span>
+      <span>${tarefa.titulo} <span class="prio-badge">${tarefa.prioridade}</span></span>
       <div>
-        <button onclick="alternarStatus(${tarefa.id})">✔</button>
-        <button onclick="removerTarefa(${tarefa.id})">🗑</button>
+        <button aria-label="Marcar como concluída" onclick="alternarStatus(${tarefa.id})">✔</button>
+        <button aria-label="Remover tarefa" onclick="removerTarefa(${tarefa.id})">🗑</button>
       </div>
     `;
     list.appendChild(div);
@@ -83,13 +92,14 @@ form.addEventListener("submit", (e) => {
 
   const titulo = input.value.trim();
   const prioridade = select.value;
+  const dueDate = document.getElementById("taskDue") ? document.getElementById("taskDue").value || null : null;
 
   if (!titulo) {
     mostrarFeedback("Digite um título válido.", true);
     return;
   }
 
-  const nova = new Tarefa(titulo, prioridade);
+  const nova = new Tarefa(titulo, prioridade, dueDate);
   tarefas.push(nova);
   salvarLocalStorage();
   renderizarTarefas();
@@ -124,9 +134,66 @@ function removerTarefa(id) {
 // ==========================
 function mostrarFeedback(msg, erro = false) {
   feedback.textContent = msg;
-  feedback.style.color = erro ? "red" : "green";
-  setTimeout(() => (feedback.textContent = ""), 3000);
+  feedback.classList.remove("success", "error");
+  feedback.classList.add(erro ? "error" : "success");
+  setTimeout(() => {
+    feedback.textContent = "";
+    feedback.classList.remove("success", "error");
+  }, 3000);
 }
+
+/* Notifications: permission request, scheduler, and display */
+function requestNotificationPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        mostrarFeedback('Notificações ativadas.');
+      }
+    });
+  }
+}
+
+function showDueNotification(tarefa) {
+  const title = `Lembrete: ${tarefa.titulo}`;
+  const when = tarefa.dueDate ? new Date(tarefa.dueDate).toLocaleString() : '';
+  const body = `Prioridade: ${tarefa.prioridade}${when ? ' • ' + when : ''}`;
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try {
+      new Notification(title, { body, tag: String(tarefa.id) });
+    } catch (e) {
+      mostrarFeedback(`${tarefa.titulo} — ${body}`);
+    }
+  } else {
+    // fallback to in-app feedback
+    mostrarFeedback(`${tarefa.titulo} — ${when}`, false);
+  }
+}
+
+/* Start periodic checker for due tasks (runs while app is open) */
+function startDueChecker(intervalMs = 30000) {
+  if (window._dueCheckerInterval) clearInterval(window._dueCheckerInterval);
+  function check() {
+    const now = new Date();
+    let changed = false;
+    tarefas.forEach(t => {
+      if (t.dueDate && !t.notified && !t.concluida) {
+        const due = new Date(t.dueDate);
+        if (due <= now) {
+          showDueNotification(t);
+          t.notified = true;
+          changed = true;
+        }
+      }
+    });
+    if (changed) {
+      salvarLocalStorage();
+      renderizarTarefas();
+    }
+  }
+  check();
+  window._dueCheckerInterval = setInterval(check, intervalMs);
+} 
 
 // ==========================
 // INICIALIZAÇÃO
@@ -139,6 +206,27 @@ function mostrarFeedback(msg, erro = false) {
     } else {
       carregarTarefasIniciais();
     }
+
+    // initialize Sortable for task reordering (touch + mouse)
+    if (typeof Sortable !== 'undefined') {
+      new Sortable(list, {
+        animation: 150,
+        direction: 'horizontal',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        onEnd: () => {
+          const ids = Array.from(list.querySelectorAll('.task')).map(n => Number(n.dataset.id));
+          tarefas = ids.map(id => tarefas.find(t => t.id === id));
+          salvarLocalStorage();
+          renderizarTarefas();
+        }
+      });
+    }
+
+    // request permission (if needed) and start the in-page checker
+    try { requestNotificationPermission(); } catch (e) { /* ignore */ }
+    startDueChecker();
+
   } catch (e) {
     mostrarFeedback("Erro ao inicializar o app.", true);
     console.error(e);
