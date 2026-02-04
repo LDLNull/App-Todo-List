@@ -4,10 +4,9 @@
   --primary: #0083cfc7;
   --text: #fffdfd;
   --border: #ddd;  
-  /* priority shades – stronger blue for higher priority */
-  --prio-alta: #004b74; /* alta = strongest */
-  --prio-media: #007bbf; /* média = medium */
-  --prio-baixa: #67cfff; /* baixa = light */
+  --prio-alta: #004b74; /* alta =  */
+  --prio-media: #007bbf; /* média =  */
+  --prio-baixa: #67cfff; /* baixa =  */
 }
 :root{
   --glass-bg: rgba(255,255,255,0.12);
@@ -85,7 +84,6 @@ form {
   box-shadow: 0 8px 28px rgba(2,6,23,0.45);
 }
 
-/* Form controls inside glass form */
 form input, form select {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.10);
@@ -124,23 +122,21 @@ form input[type="datetime-local"]:focus {
   outline: none;
 }
 
-/* Make the in-input text readable on WebKit browsers */
 form input[type="datetime-local"]::-webkit-datetime-edit {
   color: var(--text);
 }
 
-/* Style calendar/time picker indicator (WebKit) */
 form input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   filter: invert(1) sepia(1) saturate(5) hue-rotate(160deg);
   opacity: 0.9;
 }
 
-/* Small responsive tweak so the datetime input doesn't shrink too much */
+
 @media (max-width: 600px) {
   form input[type="datetime-local"] { min-width: 100px; padding: 0.4rem 0.5rem; font-size: 0.92rem; }
 }
 
-/* Buttons inside form */
+
 form button {
   background: linear-gradient(90deg, var(--primary), var(--accent));
   color: var(--text);
